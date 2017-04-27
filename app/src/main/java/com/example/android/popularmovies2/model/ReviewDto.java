@@ -4,43 +4,37 @@ package com.example.android.popularmovies2.model;
  * Created by jjesusmp on 27/04/2017.
  */
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result implements Parcelable{
+public class ReviewDto implements Parcelable {
 
     @SerializedName("id")
-    @Expose
     private String id;
     @SerializedName("author")
-    @Expose
     private String author;
     @SerializedName("content")
-    @Expose
     private String content;
     @SerializedName("url")
-    @Expose
     private String url;
-    public final static Parcelable.Creator<Result> CREATOR = new Creator<Result>() {
 
+    public final static Parcelable.Creator<ReviewDto> CREATOR = new Creator<ReviewDto>() {
 
-        @SuppressWarnings({
-                "unchecked"
-        })
-        public Result createFromParcel(Parcel in) {
-            Result instance = new Result();
-            instance.id = ((String) in.readValue((String.class.getClassLoader())));
-            instance.author = ((String) in.readValue((String.class.getClassLoader())));
-            instance.content = ((String) in.readValue((String.class.getClassLoader())));
-            instance.url = ((String) in.readValue((String.class.getClassLoader())));
+        public ReviewDto createFromParcel(Parcel in) {
+            ReviewDto instance = new ReviewDto();
+            instance.id = in.readString();
+            instance.author = in.readString();
+            instance.content = in.readString();
+            instance.url = in.readString();
             return instance;
         }
 
-        public Result[] newArray(int size) {
-            return (new Result[size]);
+        public ReviewDto[] newArray(int size) {
+            return (new ReviewDto[size]);
         }
 
     }
@@ -88,5 +82,6 @@ public class Result implements Parcelable{
     public int describeContents() {
         return 0;
     }
+
 
 }

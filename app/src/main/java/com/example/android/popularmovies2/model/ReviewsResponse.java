@@ -1,34 +1,28 @@
-package com.example.android.popularmovies2.network;
+package com.example.android.popularmovies2.model;
 
-import java.util.List;
 
-import com.example.android.popularmovies2.model.ReviewDto;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ReviewsListResult {
+import java.util.ArrayList;
+import java.util.List;
 
-    @SerializedName("id")
-    @Expose
-    private Integer id;
-    @SerializedName("results")
-    @Expose
-    private List<ReviewDto> results = null;
+public class ReviewsResponse {
 
-    public Integer getId() {
-        return id;
+
+        @SerializedName("results")
+        @Expose
+        private List<ReviewDto> results = new ArrayList<>();
+
+        public List<ReviewDto> getResults() {
+            return results;
+        }
+
+        public void setResults(List<ReviewDto> results) {
+            this.results = results;
+        }
+
+
+
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public List<ReviewDto> getResults() {
-        return results;
-    }
-
-    public void setResults(List<ReviewDto> results) {
-        this.results = results;
-    }
-
-}
