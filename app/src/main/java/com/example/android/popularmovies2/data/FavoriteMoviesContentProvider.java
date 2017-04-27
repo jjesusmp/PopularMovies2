@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
- * Created by jjesusmp on 21/04/2017.
+ * Created by jjesusmp
  */
 
 public class FavoriteMoviesContentProvider extends ContentProvider{

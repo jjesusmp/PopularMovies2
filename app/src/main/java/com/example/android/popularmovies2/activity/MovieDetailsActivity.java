@@ -3,6 +3,7 @@ package com.example.android.popularmovies2.activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +19,15 @@ import android.widget.Toast;
 
 import com.example.android.popularmovies2.R;
 import com.example.android.popularmovies2.adapter.ReviewListAdapter;
+import com.example.android.popularmovies2.adapter.TrailerListAdapter;
 import com.example.android.popularmovies2.data.FavoriteMoviesContract;
 import com.example.android.popularmovies2.model.MovieDto;
 import com.example.android.popularmovies2.model.ReviewDto;
 import com.example.android.popularmovies2.model.ReviewsResponse;
+import com.example.android.popularmovies2.model.TrailerDto;
 import com.example.android.popularmovies2.utils.Constants;
 import com.example.android.popularmovies2.utils.FetchReviewListTask;
+import com.example.android.popularmovies2.utils.FetchTrailerListTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -38,7 +42,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MovieDetailsActivity extends AppCompatActivity implements FetchReviewListTask.Listener,ReviewListAdapter.Callbacks{
+public class MovieDetailsActivity extends AppCompatActivity implements FetchReviewListTask.Listener,ReviewListAdapter.Callbacks,
+        FetchTrailerListTask.Listener,TrailerListAdapter.Callbacks{
 
     @BindView(R.id.abstractTitleTextView) TextView mTitle;
     @BindView(R.id.abstractPosterImageView) ImageView mImage;
@@ -47,9 +52,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
     @BindView(R.id.abstractReleaseDateTextView) TextView mReleaseDate;
     @BindView(R.id.btnAdFav) TextView mAddFavButton;
     @BindView(R.id.btnDelFav) TextView mAddDelButton;
-    @BindView(R.id.review_list) RecyclerView mRecyclerView;
+    @BindView(R.id.review_list) RecyclerView mRecyclerViewReview;
+    @BindView(R.id.trailer_list) RecyclerView mRecyclerViewTrailer;
+
 
     private ReviewListAdapter mReviewListAdapter;
+    private TrailerListAdapter mTrailerListAdapter;
     private MovieDto mMovie;
 
     @Override
@@ -72,14 +80,29 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
             mUserRating.setText(mMovie.getUser_rating());
             mReleaseDate.setText(mMovie.getRelease_date());
 
+            if(checkFavorite()){
+                mAddFavButton.setVisibility(View.INVISIBLE);
+                mAddDelButton.setVisibility(View.VISIBLE);
+            } else{
+                mAddFavButton.setVisibility(View.VISIBLE);
+                mAddDelButton.setVisibility(View.INVISIBLE);
+            }
 
             LinearLayoutManager layoutManager
                     = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            mRecyclerView.setLayoutManager(layoutManager);
+
+            mRecyclerViewReview.setLayoutManager(layoutManager);
             mReviewListAdapter = new ReviewListAdapter(new ArrayList<ReviewDto>(),this);
-            mRecyclerView.setAdapter(mReviewListAdapter);
-            mRecyclerView.setNestedScrollingEnabled(false);
+            mRecyclerViewReview.setAdapter(mReviewListAdapter);
+            mRecyclerViewReview.setNestedScrollingEnabled(false);
+
+            //mRecyclerViewTrailer.setLayoutManager(layoutManager);
+            mTrailerListAdapter = new TrailerListAdapter(new ArrayList<TrailerDto>(),this);
+            mRecyclerViewTrailer.setAdapter(mTrailerListAdapter);
+            mRecyclerViewTrailer.setNestedScrollingEnabled(false);
+
             loadReviewsListData();
+            loadTrailerListData();
         }
         ButterKnife.bind(this);
 
@@ -101,6 +124,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
             if (uri != null) {
                 Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
             }
+        mAddFavButton.setVisibility(View.INVISIBLE);
     }
 
     public void onClickDeleteFavorite (View view){
@@ -109,6 +133,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
         Uri uri = FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(id).build();
         getContentResolver().delete(uri, null, null);
+        mAddDelButton.setVisibility(View.INVISIBLE);
+
+
+
     }
 
     @Override
@@ -126,6 +154,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
         task.execute(mMovie.get__idMovie());
     }
 
+    private void loadTrailerListData() {
+        FetchTrailerListTask task = new FetchTrailerListTask(this);
+        task.execute(mMovie.get__idMovie());
+    }
+
     @Override
     public void onReviewsFetchFinished(List<ReviewDto> reviews) {
         mReviewListAdapter.setReviewsData(reviews);
@@ -135,5 +168,28 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
     public void readReview(ReviewDto review, int position) {
         startActivity(new Intent(Intent.ACTION_VIEW,
                 Uri.parse(review.getUrl())));
+    }
+
+    @Override
+    public void onTrailersFetchFinished(List<TrailerDto> trailers) {
+        mTrailerListAdapter.setTrailersData(trailers);
+    }
+
+    @Override
+    public void watchVideo(TrailerDto trailer, int position) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v="+trailer.getKey())));
+    }
+
+    private Boolean checkFavorite(){
+        String id = mMovie.get__idMovie();
+        Uri uri = FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(id).build();
+
+        Cursor cursor = getContentResolver().query(uri,null,null,null,null);
+        if(cursor.getCount()!=0) {
+            return true;
+        }
+        return false;
+
     }
 }

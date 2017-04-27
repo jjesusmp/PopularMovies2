@@ -1,7 +1,7 @@
 package com.example.android.popularmovies2.model;
 
 /**
- * Created by jjesusmp on 27/04/2017.
+ * Created by jjesusmp
  */
 
 
