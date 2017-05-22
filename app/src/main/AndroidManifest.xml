@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.popularmovies1">
+    package="com.example.android.popularmovies2">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,14 +10,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.android.popularmovies2.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MovieAbstractActivity"></activity>
+        <activity android:name="com.example.android.popularmovies2.activity.MovieDetailsActivity"></activity>
+
+        <provider
+            android:authorities="com.example.android.popularmovies2"
+            android:name=".data.FavoriteMoviesContentProvider"
+            android:exported="false">
+        </provider>
     </application>
 
 </manifest>

@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity"
+    >
 
     <item
         android:title="@string/orderBy"
@@ -14,6 +15,9 @@
             <item
                 android:id="@+id/menuSortRating"
                 android:title="Rating" />
+            <item
+                android:id="@+id/menuSortFavorites"
+                android:title="Favorites" />
         </menu>
     </item>
 </menu>

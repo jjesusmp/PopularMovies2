@@ -1,11 +1,23 @@
 <resources>
-    <string name="app_name">PopularMovies1</string>
+    <string name="app_name">PopularMovies2</string>
     <string name="error_message">
         An error has occurred. Please try again.
     </string>
 
     <string name="title_activity_movie_abstract">MovieAbstractActivity</string>
     <string name="orderBy">Order by:</string>
+
+    <string name="orderBy_param">orderBy_param</string>
+
+    <string name="btnAddFav">btnAddFav</string>
+    <string name="btnDelFav">btnDelFav</string>
+
+    <string name="review_list">review_list</string>
+    <string name="review_content">review_content</string>
+    <string name="review_author">review_author</string>
+
+    <string name="trailer_list">trailer_list</string>
+    <string name="trailer_image">trailer_image</string>
 
 </resources>
 
