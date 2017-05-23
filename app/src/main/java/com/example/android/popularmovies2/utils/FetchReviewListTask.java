@@ -1,7 +1,6 @@
 package com.example.android.popularmovies2.utils;
 
 import android.os.AsyncTask;
-import android.view.View;
 
 import com.example.android.popularmovies2.model.ReviewDto;
 import com.example.android.popularmovies2.model.ReviewsResponse;
@@ -10,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import rest.ApiService;
+import com.example.android.popularmovies2.rest.ApiService;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;

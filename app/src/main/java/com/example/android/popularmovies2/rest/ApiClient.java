@@ -1,4 +1,4 @@
-package rest;
+package com.example.android.popularmovies2.rest;
 
 /**
  * Created by jjesusmp on 27/04/2017.

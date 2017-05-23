@@ -1,14 +1,11 @@
 package com.example.android.popularmovies2.activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -23,24 +20,17 @@ import com.example.android.popularmovies2.adapter.TrailerListAdapter;
 import com.example.android.popularmovies2.data.FavoriteMoviesContract;
 import com.example.android.popularmovies2.model.MovieDto;
 import com.example.android.popularmovies2.model.ReviewDto;
-import com.example.android.popularmovies2.model.ReviewsResponse;
 import com.example.android.popularmovies2.model.TrailerDto;
 import com.example.android.popularmovies2.utils.Constants;
 import com.example.android.popularmovies2.utils.FetchReviewListTask;
 import com.example.android.popularmovies2.utils.FetchTrailerListTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rest.ApiService;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieDetailsActivity extends AppCompatActivity implements FetchReviewListTask.Listener,ReviewListAdapter.Callbacks,
         FetchTrailerListTask.Listener,TrailerListAdapter.Callbacks{

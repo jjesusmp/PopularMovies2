@@ -26,6 +26,7 @@ import com.example.android.popularmovies2.adapter.MovieListAdapter;
 import com.example.android.popularmovies2.data.FavoriteMoviesContract;
 import com.example.android.popularmovies2.model.MovieDto;
 import com.example.android.popularmovies2.utils.Constants;
+import com.example.android.popularmovies2.utils.FetchMovieListTask;
 import com.example.android.popularmovies2.utils.PopularMoviesUtils;
 import com.example.android.popularmovies2.utils.NetworkUtils;
 
@@ -33,8 +34,9 @@ import org.json.JSONException;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, LoaderManager.LoaderCallbacks<Cursor> ,FetchMovieListTask.Listener{
 
     private RecyclerView mRecyclerView;
     private MovieListAdapter mMovieListAdapter;
@@ -64,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
     private void loadMovieListData(String sortBy) {
         showMovieListDataView();
-        new FetchMovieListTask().execute(sortBy);
+        new FetchMovieListTask(this).execute(sortBy);
+
     }
 
     @Override
@@ -121,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieDto>> {
+    /*public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieDto>> {
 
         @Override
         protected void onPreExecute() {
@@ -139,7 +142,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 String jsonMovieListResponse = NetworkUtils
                         .getResponseFromHttpUrl(url);
 
-                ArrayList<MovieDto> simpleMovieListData = PopularMoviesUtils.getMovieListFromJson(jsonMovieListResponse);
+                ArrayList<MovieDto> simpleMovieListData;
+                if(orderBy.equals(Constants.orderByFavorites)){
+                    simpleMovieListData = PopularMoviesUtils.getMovieListFromJson(jsonMovieListResponse);
+                }else{
+                    simpleMovieListData = PopularMoviesUtils.getMovieListFromJson(jsonMovieListResponse);
+                }
 
                 return simpleMovieListData;
 
@@ -159,8 +167,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 showErrorMessage();
             }
         }
-    }
-
+    }*/
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -218,5 +225,16 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mMovieListAdapter.setMovieData(null);
+    }
+
+
+    /*private void loadMovieListData(String orderParm) {
+        FetchMovieListTask task = new FetchMovieListTask(this);
+        task.execute(Constants.orderByFavorites);
+    }*/
+
+    @Override
+    public void onMoviesFetchFinished(List<MovieDto> movies) {
+        mMovieListAdapter.setMovieData((ArrayList<MovieDto>) movies);
     }
 }

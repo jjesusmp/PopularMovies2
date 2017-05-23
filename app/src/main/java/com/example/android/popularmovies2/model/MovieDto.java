@@ -3,17 +3,31 @@ package com.example.android.popularmovies2.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by jjesusmp
  */
 
 public class MovieDto implements Parcelable {
-
+    @SerializedName("title")
+    @Expose
     private String title;
+    @SerializedName("poster_path")
+    @Expose
     private String image;
+    @SerializedName("overview")
+    @Expose
     private String sypnosis;
+    @SerializedName("vote_average")
+    @Expose
     private String user_rating;
+    @SerializedName("release_date")
+    @Expose
     private String release_date;
+    @SerializedName("id")
+    @Expose
     private String _idMovie;
 
 
