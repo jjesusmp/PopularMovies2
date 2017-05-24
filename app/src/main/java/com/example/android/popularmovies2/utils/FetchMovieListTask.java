@@ -47,7 +47,7 @@ public class FetchMovieListTask extends AsyncTask<String, Void, List<MovieDto>> 
                 .build();
         ApiService apiService = retrofit.create(ApiService.class);
         Call<MoviesResponse> call;
-        if(orderBy.equals(Constants.orderByFavorites)){
+        if(orderBy.equals(Constants.orderByTopRated)){
             call = apiService.getTopRatedMovies(Constants.API_KEY);
         }else{
             call = apiService.getPopularMovies(Constants.API_KEY);

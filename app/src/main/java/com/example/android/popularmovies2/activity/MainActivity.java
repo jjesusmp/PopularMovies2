@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private MovieListAdapter mMovieListAdapter;
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
+    private static String mCurrentOrder;
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -61,13 +62,17 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         mRecyclerView.setAdapter(mMovieListAdapter);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        loadMovieListData(Constants.orderByPopular);//orderByPopular is the default order
+        mCurrentOrder = Constants.orderByPopular;//orderByPopular is the default order
+        loadMovieListData(mCurrentOrder);
     }
 
     private void loadMovieListData(String sortBy) {
-        showMovieListDataView();
-        new FetchMovieListTask(this).execute(sortBy);
-
+        if(sortBy == Constants.orderByFavorites){
+            getSupportLoaderManager().restartLoader(GET_MOVIE_LIST_LOADER_ID, null, this);
+        }else{
+            showMovieListDataView();
+            new FetchMovieListTask(this).execute(sortBy);
+        }
     }
 
     @Override
@@ -111,63 +116,21 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         int id = item.getItemId();
         if (id == R.id.menuSortRating) {
             mMovieListAdapter.setMovieData(null);
-            loadMovieListData(Constants.orderByTopRated);
+            mCurrentOrder=Constants.orderByTopRated;
+            loadMovieListData(mCurrentOrder);
             return true;
         } if (id == R.id.menuSortPopular) {
             mMovieListAdapter.setMovieData(null);
-            loadMovieListData(Constants.orderByPopular);
+            mCurrentOrder=Constants.orderByPopular;
+            loadMovieListData(mCurrentOrder);
             return true;
         } if (id == R.id.menuSortFavorites) {//get from local db
-            getSupportLoaderManager().restartLoader(GET_MOVIE_LIST_LOADER_ID, null, this);
+            mCurrentOrder=Constants.orderByFavorites;
+            loadMovieListData(mCurrentOrder);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /*public class FetchMovieListTask extends AsyncTask<String, Void, ArrayList<MovieDto>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ArrayList<MovieDto> doInBackground(String... params) {
-
-            String orderBy = params[0];
-            URL url = NetworkUtils.buildAPIUrl(orderBy);
-
-            try {
-                String jsonMovieListResponse = NetworkUtils
-                        .getResponseFromHttpUrl(url);
-
-                ArrayList<MovieDto> simpleMovieListData;
-                if(orderBy.equals(Constants.orderByFavorites)){
-                    simpleMovieListData = PopularMoviesUtils.getMovieListFromJson(jsonMovieListResponse);
-                }else{
-                    simpleMovieListData = PopularMoviesUtils.getMovieListFromJson(jsonMovieListResponse);
-                }
-
-                return simpleMovieListData;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieDto> listMovieData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (listMovieData != null) {
-                showMovieListDataView();
-                mMovieListAdapter.setMovieData(listMovieData);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }*/
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -226,12 +189,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     public void onLoaderReset(Loader<Cursor> loader) {
         mMovieListAdapter.setMovieData(null);
     }
-
-
-    /*private void loadMovieListData(String orderParm) {
-        FetchMovieListTask task = new FetchMovieListTask(this);
-        task.execute(Constants.orderByFavorites);
-    }*/
 
     @Override
     public void onMoviesFetchFinished(List<MovieDto> movies) {
