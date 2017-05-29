@@ -49,6 +49,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
     private ReviewListAdapter mReviewListAdapter;
     private TrailerListAdapter mTrailerListAdapter;
     private MovieDto mMovie;
+    private Boolean mFavoritesListHasChanges;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-
+        mFavoritesListHasChanges=false;
         if(intent.hasExtra("MovieDto")) {
             mMovie = intent.getParcelableExtra("MovieDto");
 
@@ -115,28 +116,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
                 Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
             }
         mAddFavButton.setVisibility(View.INVISIBLE);
+        mFavoritesListHasChanges=true;
     }
 
     public void onClickDeleteFavorite (View view){
-
         String id = mMovie.get__idMovie();
         Uri uri = FavoriteMoviesContract.FavoriteMovieEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(id).build();
         getContentResolver().delete(uri, null, null);
         mAddDelButton.setVisibility(View.INVISIBLE);
-
-
-
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if ((keyCode == KeyEvent.KEYCODE_BACK))
-        {
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
+        mFavoritesListHasChanges=true;
     }
 
     private void loadReviewsListData() {
@@ -181,5 +170,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements FetchRevi
         }
         return false;
 
+    }
+
+    @Override
+    public void finish() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("favoritesListHasChanges",mFavoritesListHasChanges);
+        setResult(RESULT_OK,returnIntent);
+        super.finish();
     }
 }

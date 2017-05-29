@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         Bundle mBundle = new Bundle();
         mBundle.putParcelable("MovieDto", movieInfoForThisItem);
         intent.putExtras(mBundle);
-        startActivity(intent);
+        //startActivity(intent);
+        startActivityForResult(intent,  Constants.REQUEST_CODE_MOVIE_DETAIL );
     }
 
     @Override
@@ -193,5 +194,17 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public void onMoviesFetchFinished(List<MovieDto> movies) {
         mMovieListAdapter.setMovieData((ArrayList<MovieDto>) movies);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.REQUEST_CODE_MOVIE_DETAIL && resultCode == RESULT_OK) {
+            Boolean favoritesListHasChanges = data.getExtras().getBoolean("favoritesListHasChanges");
+            if(favoritesListHasChanges && mCurrentOrder.equals(Constants.orderByFavorites)){
+                getSupportLoaderManager().restartLoader(GET_MOVIE_LIST_LOADER_ID, null, this);
+            }
+            // deal with the item yourself
+        }
     }
 }

@@ -20,6 +20,8 @@ public class Constants {
     public final static String BASE_URL_IMAGE = "http://image.tmdb.org/t/p";
     public final static String PARAM_SIZE = "/w185/";
 
+    public final static int REQUEST_CODE_MOVIE_DETAIL = 1;
+
 
 
 }
